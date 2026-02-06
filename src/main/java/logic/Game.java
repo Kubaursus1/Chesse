@@ -17,7 +17,7 @@ public class Game {
     private Board board;
     private STATE state = STATE.NOT_STARTED;
     private final MoveVisitor moveVisitor;
-    protected enum STATE {
+    public enum STATE {
         NOT_STARTED,
         STARTED,
     }
@@ -84,6 +84,10 @@ public class Game {
         return players;
     }
 
+    public STATE getState() {
+        return state;
+    }
+
     public Player getActivePlayer() {
         return activePlayer;
     }
@@ -92,7 +96,11 @@ public class Game {
         return board;
     }
 
-    public class MoveHandler implements MoveVisitor {
+    private class MoveHandler implements MoveVisitor {
+        private void movePiece(BaseMove baseMove) {
+            board.movePiece(baseMove.getPiece(), baseMove.getDestination());
+            baseMove.getPiece().makeMove(baseMove);
+        }
         @Override
         public void visit(Capture capture) {
             Player nonActivePlayer = getNonActivePlayer();
@@ -101,13 +109,12 @@ public class Game {
             nonActivePlayer.remove(pieceToBeRemoved);
             pieceToBeRemoved.removeFromBoard();
 
-            board.setPiece(capture.getPiece(), capture.getDestination());
-            capture.getPiece().makeMove(capture);
+            movePiece(capture);
         }
 
         @Override
         public void visit(Move move) {
-            move.getPiece().makeMove(move);
+            movePiece(move);
         }
     }
 }

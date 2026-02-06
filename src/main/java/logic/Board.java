@@ -22,14 +22,21 @@ public class Board {
     }
 
     public boolean existsPiece(Piece piece) {
-        return squares.get(piece.getCoordinates()).isPresent();
+        if (piece == null)
+            throw new NullPointerException("piece");
+        return squares.get(piece.getCoordinates().get()).isPresent();
     }
 
     public Piece getPiece(Coordinates coordinates) {
         return this.squares.get(coordinates).get();
     }
 
-    public void setPiece(Piece piece, Coordinates coordinates) {
+    public void movePiece(Piece piece, Coordinates coordinates) {
+        if (piece == null)
+            throw new NullPointerException("piece");
+
+        Coordinates oldCoordinates = piece.getCoordinates().orElseThrow(() -> new IllegalArgumentException("piece doesn't exist on board"));
+        this.squares.put(oldCoordinates, Optional.empty());
         this.squares.put(coordinates, Optional.of(piece));
     }
 
