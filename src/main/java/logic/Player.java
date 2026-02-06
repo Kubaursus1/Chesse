@@ -33,6 +33,9 @@ public class Player {
         createOtherPieces(rows[1]);
 
     }
+    public void remove(Piece piece) {
+        this.pieces.remove(piece);
+    }
     private void createPawns(int row) {
         for (int i = 0; i< Board.BOARD_SIZE; i++) {
             pieces.add(new Pawn(this, new Coordinates(i, row)));

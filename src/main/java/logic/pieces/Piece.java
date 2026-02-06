@@ -1,21 +1,23 @@
 package logic.pieces;
 
 import logic.Player;
+import logic.moves.BaseMove;
+import logic.moves.Move;
 import utils.Coordinates;
 
+import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class Piece {
-    private Coordinates coordinates;
+    private Optional<Coordinates> coordinates;
     private final Player owner;
-//    private final char symbol;
     private final Map<Player.COLOR, Character> symbols;
 
-    protected Piece(Player owner, Coordinates coordinates, char symbolBlack,char symbolWhite) {
+    protected Piece(Player owner, Coordinates coordinates, char symbolBlack, char symbolWhite) {
         this.owner = owner;
-        this.coordinates = coordinates;
-//        this.symbol = symbol;
+        this.coordinates = Optional.of(coordinates);
         symbols = Map.of(Player.COLOR.BLACK, symbolBlack, Player.COLOR.WHITE, symbolWhite);
     }
 
@@ -25,8 +27,24 @@ public abstract class Piece {
 
     public abstract Collection<Coordinates> getAllValidCaptures();
 
-    public Coordinates getCoordinates() {
+    public  Optional<Coordinates>  getCoordinates() {
         return coordinates;
+    }
+
+    public void makeMove(BaseMove move) {
+        if (move == null)
+            throw new NullPointerException("move");
+        if (move.getPieceOwner() != owner)
+            throw new IllegalArgumentException("invalid owner");
+
+        setCoordinates( Optional.of(move.getDestination()));
+    }
+    public void removeFromBoard()
+    {
+        this.coordinates = Optional.empty();
+    }
+    private void setCoordinates( Optional<Coordinates>  coordinates) {
+        this.coordinates = coordinates;
     }
 
     public Player getOwner() {
@@ -35,6 +53,6 @@ public abstract class Piece {
 
     @Override
     public String toString() {
-        return String.valueOf( symbols.get(owner.getColor()));
+        return String.valueOf(symbols.get(owner.getColor()));
     }
 }
