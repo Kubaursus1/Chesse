@@ -33,6 +33,10 @@ public class Game {
 
     public void start() {
         board = new Board(Arrays.stream(players).flatMap(p -> p.getPieces().stream()).toList());
+        List<Piece> pieces = board.getAllPieces();
+        for ( var piece : pieces) {
+            piece.setBoard(board);
+        }
         state = STATE.STARTED;
     }
 

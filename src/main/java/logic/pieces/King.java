@@ -2,8 +2,10 @@ package logic.pieces;
 
 import logic.Player;
 import utils.Coordinates;
+import utils.Directions;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 public class King extends Piece{
@@ -13,11 +15,13 @@ public class King extends Piece{
 
     @Override
     public Collection<Coordinates> getAllValidMoves() {
-        return List.of();
+        return getBoard().getSquaresInRange(this, 1,
+                EnumSet.of(Directions.DIAGONAL,Directions.HORIZONTAL, Directions.VERTICAL), false);
     }
 
     @Override
     public Collection<Coordinates> getAllValidCaptures() {
-        return List.of();
+        return getBoard().getSquaresInRange(this, 1,
+                EnumSet.of(Directions.DIAGONAL,Directions.HORIZONTAL, Directions.VERTICAL), true);
     }
 }
